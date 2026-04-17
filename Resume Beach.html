@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ahvner Vazquez · Sunset Court</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="beach-styles.css" />
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+  <div class="vignette"></div>
+  <div id="ui-root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script src="content.js"></script>
+  <script type="text/babel" data-presets="react" src="beach-ui.jsx"></script>
+
+  <script type="module">
+    import { initScene, flyTo } from './beach-scene.js';
+
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "intensity": 1.35
+    }/*EDITMODE-END*/;
+
+    document.body.style.setProperty('--sunset-intensity', TWEAK_DEFAULTS.intensity);
+
+    const canvas = document.getElementById('bg-canvas');
+    initScene(canvas, {
+      onSectionClick: (id) => { if (window.__onSectionClick) window.__onSectionClick(id); },
+    });
+    window.__flyTo = flyTo;
+
+    const boot = () => {
+      if (!window.BeachApp) return setTimeout(boot, 50);
+      const root = ReactDOM.createRoot(document.getElementById('ui-root'));
+      root.render(React.createElement(window.BeachApp));
+    };
+    boot();
+  </script>
+</body>
+</html>
